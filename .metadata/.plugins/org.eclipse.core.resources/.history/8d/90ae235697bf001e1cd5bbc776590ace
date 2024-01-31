@@ -1,0 +1,11 @@
+package com.example.demo.services;
+
+import java.util.List;
+
+import com.example.demo.enteties.Actualite;
+
+public interface actualiteInterService {
+
+	public boolean addActualite (Actualite act);
+	public List<Actualite> getAll();
+}

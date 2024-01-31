@@ -1,0 +1,8 @@
+package com.example.demo.services;
+
+import com.example.demo.enteties.Actualite;
+
+public interface actualiteInterService {
+
+	public boolean addActualite (Actualite act);
+}
