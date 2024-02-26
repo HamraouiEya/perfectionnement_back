@@ -8,7 +8,7 @@ import com.example.demo.exeptions.ActualiteNotFoundException;
 
 public interface actualiteInterService {
 
-	public boolean addActualite (Actualite act);
+	public Actualite addActualite (Actualite act);
 	public List<Actualite> getAll();
 	public Optional<Actualite> getActById(int id);
 	public boolean deleteActualite(int id ) throws ActualiteNotFoundException;

@@ -1,0 +1,93 @@
+package com.example.demo.services;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.example.demo.enteties.Etudiant;
+import com.example.demo.enteties.VerifyTokenEntity;
+import com.example.demo.exeptions.ActualiteNotFoundException;
+import com.example.demo.repositories.etudiantRep;
+import com.example.demo.repositories.tokenRep;
+
+@Service
+public class EtudiantImplService implements etuadiantInterService {
+
+    @Autowired
+    private etudiantRep etudiantRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private tokenRep verifyTokenRepository;
+
+    public void addEtudiant(Etudiant et) {
+        etudiantRepository.save(et);
+    }
+
+    private String generateToken(String userEmail, String secret) {
+        return JWT.create()
+                .withIssuer("StagePer")
+                .withSubject(userEmail)
+                .sign(Algorithm.HMAC256(secret));
+    }
+
+    public void verifyEmail(String vtoken) {
+        // Retrieve the verification token from the repository
+        VerifyTokenEntity verificationToken = verifyTokenRepository.findByToken(vtoken);
+        if (verificationToken != null) {
+            // Retrieve the corresponding student by email
+            Etudiant et = etudiantRepository.findByEmail(verificationToken.getUserEmail());
+            if (et != null) {
+                // Generate a secure and unique token
+                String secret = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+                String token = generateToken(et.getEmail(), secret);
+
+                // Save the verification token to the repository
+                verificationToken.setToken(token);
+                verifyTokenRepository.save(verificationToken);
+
+                // Construct the verification link and email body
+                String verificationLink = "http://localhost:4200/verify?token=" + token;
+                String emailBody = "Please click the link below to verify your email:\n" + verificationLink;
+
+                // Send the verification email
+                emailService.sendVerificationEmail(et.getEmail(), "Email Verification", emailBody);
+
+                // Set email verified flag to true
+                et.setEmailVerified(true);
+                // Save the student entity
+                etudiantRepository.save(et);
+                // Delete the verification token
+                verifyTokenRepository.delete(verificationToken);
+            } else {
+                System.out.println("No user found with email: " + verificationToken.getUserEmail());
+            }
+        } else {
+            System.out.println("No verification token found with token: " + vtoken);
+        }
+    }
+
+    public List<Etudiant> getEtudiants() {
+        return etudiantRepository.findAll();
+    }
+
+    public Optional<Etudiant> getEtudiantById(int id) {
+        return etudiantRepository.findById(id);
+    }
+
+    public boolean deleteEtudiant(int id) throws ActualiteNotFoundException {
+        Optional<Etudiant> etudiant = etudiantRepository.findById(id);
+        if (etudiant.isPresent()) {
+            etudiantRepository.deleteById(id);
+            return true;
+        } else {
+            throw new ActualiteNotFoundException("Etudiant not found");
+        }
+    }
+}

@@ -1,8 +1,10 @@
-package com.example.demo.enteties;
+																										package com.example.demo.enteties;
 
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,19 +21,16 @@ public class Actualite {
 	int id;
 	String nom;
 	String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
 	Date date;
-	@Lob
-	@Column(name = "file_content", columnDefinition = "BLOB")
-	private byte[] img;
+	String img;
 	
 	public Actualite() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
-	public Actualite(int id, String nom, String description, Date date, byte[] img) {
+	public Actualite(int id, String nom, String description, Date date,  String img) {
 		super();
 		this.id = id;
 		this.nom = nom;
@@ -74,11 +73,11 @@ public class Actualite {
 		this.date = date;
 	}
 
-	public byte[] getImg() {
+	public String getImg() {
 		return img;
 	}
 
-	public void setImg(byte[] img) {
+	public void setImg(String img) {
 		this.img = img;
 	}
 

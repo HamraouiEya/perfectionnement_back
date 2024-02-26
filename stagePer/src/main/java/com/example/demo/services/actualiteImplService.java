@@ -25,11 +25,9 @@ public class actualiteImplService  implements actualiteInterService{
 		return actualiteRep.findById(id);
 	}
 	
-	public boolean addActualite (Actualite act)
-	{
-		actualiteRep.save(act);
-		return true ;
-	}
+	 public Actualite addActualite(Actualite actualite) {
+	        return actualiteRep.save(actualite);
+	    }
 	
 	public boolean deleteActualite(int id ) throws ActualiteNotFoundException
 	{

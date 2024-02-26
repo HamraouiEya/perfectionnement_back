@@ -1,0 +1,14 @@
+spring.datasource.url=jdbc:mysql://localhost:3306/academie?createDatabaseIfNotExist=true
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+spring.datasource.username=root
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+server.port=8082
+
+file.upload.directory=D:\perfectionnement\uploads
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=hamraouieya3@gmail.com
+spring.mail.password=exgpmsbkyytzgccq
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true

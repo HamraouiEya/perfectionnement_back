@@ -1,7 +1,0 @@
-package com.example.demo.exeptions;
-
-public interface ActualiteNotFoundException extends Exception{
-	 public ActualiteNotFoundException (String message){
-	        super(message);
-	    }
-}
